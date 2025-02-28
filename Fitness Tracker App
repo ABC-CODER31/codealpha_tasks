@@ -1,128 +1,78 @@
-using System;
-using System.Collections.Generic;
+class Workout:
+    def __init__(self, exercise, duration, calories_burned):
+        self.exercise = exercise
+        self.duration = duration
+        self.calories_burned = calories_burned
 
-class Workout
-{
-    public string Exercise { get; set; }
-    public int Duration { get; set; } // in minutes
-    public int CaloriesBurned { get; set; }
+workout_history = []
+goal_calories = 0
+goal_duration = 0
 
-    public Workout(string exercise, int duration, int caloriesBurned)
-    {
-        Exercise = exercise;
-        Duration = duration;
-        CaloriesBurned = caloriesBurned;
-    }
-}
+def record_workout():
+    exercise = input("Enter exercise name: ")
+    
+    try:
+        duration = int(input("Enter duration (minutes): "))
+        calories = int(input("Enter calories burned: "))
+    except ValueError:
+        print("Invalid input! Please enter numbers for duration and calories.\n")
+        return
 
-class FitnessTracker
-{
-    static List<Workout> workoutHistory = new List<Workout>();
-    static int goalCalories = 0;
-    static int goalDuration = 0;
+    workout_history.append(Workout(exercise, duration, calories))
+    print("Workout recorded successfully!\n")
 
-    static void Main()
-    {
-        while (true)
-        {
-            Console.WriteLine("\n===== Fitness Tracker App =====");
-            Console.WriteLine("1. Record Workout");
-            Console.WriteLine("2. Set Fitness Goal");
-            Console.WriteLine("3. View Progress");
-            Console.WriteLine("4. Exit");
-            Console.Write("Enter choice: ");
+def set_fitness_goal():
+    global goal_calories, goal_duration
 
-            string choice = Console.ReadLine();
+    try:
+        goal_calories = int(input("Set daily calorie goal: "))
+        goal_duration = int(input("Set daily workout duration goal (minutes): "))
+    except ValueError:
+        print("Invalid input! Please enter numbers.\n")
+        return
 
-            switch (choice)
-            {
-                case "1":
-                    RecordWorkout();
-                    break;
-                case "2":
-                    SetFitnessGoal();
-                    break;
-                case "3":
-                    ViewProgress();
-                    break;
-                case "4":
-                    Console.WriteLine("Goodbye!");
-                    return;
-                default:
-                    Console.WriteLine("Invalid choice. Try again!");
-                    break;
-            }
-        }
-    }
+    print("Fitness goal set successfully!\n")
 
-    static void RecordWorkout()
-    {
-        Console.Write("Enter exercise name: ");
-        string exercise = Console.ReadLine();
-        
-        Console.Write("Enter duration (minutes): ");
-        if (!int.TryParse(Console.ReadLine(), out int duration) || duration <= 0)
-        {
-            Console.WriteLine("Invalid duration!");
-            return;
-        }
+def view_progress():
+    if not workout_history:
+        print("No workouts recorded yet.\n")
+        return
 
-        Console.Write("Enter calories burned: ");
-        if (!int.TryParse(Console.ReadLine(), out int calories) || calories <= 0)
-        {
-            Console.WriteLine("Invalid calorie input!");
-            return;
-        }
+    total_calories = sum(workout.calories_burned for workout in workout_history)
+    total_duration = sum(workout.duration for workout in workout_history)
 
-        workoutHistory.Add(new Workout(exercise, duration, calories));
-        Console.WriteLine("Workout recorded successfully!");
-    }
+    print("\n===== Workout History =====")
+    for workout in workout_history:
+        print(f"{workout.exercise} - {workout.duration} min, {workout.calories_burned} cal")
 
-    static void SetFitnessGoal()
-    {
-        Console.Write("Set daily calorie goal: ");
-        if (!int.TryParse(Console.ReadLine(), out goalCalories) || goalCalories <= 0)
-        {
-            Console.WriteLine("Invalid goal!");
-            return;
-        }
+    print(f"\nTotal Calories Burned: {total_calories} cal")
+    print(f"Total Workout Time: {total_duration} min")
 
-        Console.Write("Set daily workout duration goal (minutes): ");
-        if (!int.TryParse(Console.ReadLine(), out goalDuration) || goalDuration <= 0)
-        {
-            Console.WriteLine("Invalid goal!");
-            return;
-        }
+    if goal_calories or goal_duration:
+        print("\n===== Progress Towards Goal =====")
+        print(f"Calories Goal: {goal_calories} cal ({'✅ Achieved' if total_calories >= goal_calories else '❌ Not Achieved'})")
+        print(f"Workout Time Goal: {goal_duration} min ({'✅ Achieved' if total_duration >= goal_duration else '❌ Not Achieved'})")
 
-        Console.WriteLine("Fitness goal set successfully!");
-    }
+def main():
+    while True:
+        print("\n===== Fitness Tracker App =====")
+        print("1. Record Workout")
+        print("2. Set Fitness Goal")
+        print("3. View Progress")
+        print("4. Exit")
+        choice = input("Enter choice: ")
 
-    static void ViewProgress()
-    {
-        if (workoutHistory.Count == 0)
-        {
-            Console.WriteLine("No workouts recorded yet.");
-            return;
-        }
+        if choice == "1":
+            record_workout()
+        elif choice == "2":
+            set_fitness_goal()
+        elif choice == "3":
+            view_progress()
+        elif choice == "4":
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid choice! Try again.\n")
 
-        int totalCalories = 0, totalDuration = 0;
-        Console.WriteLine("\n===== Workout History =====");
-
-        foreach (var workout in workoutHistory)
-        {
-            Console.WriteLine($"{workout.Exercise} - {workout.Duration} min, {workout.CaloriesBurned} cal");
-            totalCalories += workout.CaloriesBurned;
-            totalDuration += workout.Duration;
-        }
-
-        Console.WriteLine($"\nTotal Calories Burned: {totalCalories} cal");
-        Console.WriteLine($"Total Workout Time: {totalDuration} min");
-
-        if (goalCalories > 0 || goalDuration > 0)
-        {
-            Console.WriteLine("\n===== Progress Towards Goal =====");
-            Console.WriteLine($"Calories Goal: {goalCalories} cal ({(totalCalories >= goalCalories ? "✅ Achieved" : "❌ Not Achieved")})");
-            Console.WriteLine($"Workout Time Goal: {goalDuration} min ({(totalDuration >= goalDuration ? "✅ Achieved" : "❌ Not Achieved")})");
-        }
-    }
-}
+if __name__ == "__main__":
+    main()
