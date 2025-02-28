@@ -1,42 +1,27 @@
-using System;
-using System.Collections.Generic;
+import random
 
-class Program
-{
-    static List<string> quotes = new List<string>
-    {
-        "The only way to do great work is to love what you do. - Steve Jobs",
-        "Success is not final, failure is not fatal: it is the courage to continue that counts. - Winston Churchill",
-        "Believe you can and you're halfway there. - Theodore Roosevelt",
-        "Do what you can, with what you have, where you are. - Theodore Roosevelt",
-        "Act as if what you do makes a difference. It does. - William James",
-        "Dream big and dare to fail. - Norman Vaughan",
-        "Keep your face always toward the sunshine—and shadows will fall behind you. - Walt Whitman"
-    };
+quotes = [
+    "The only way to do great work is to love what you do. - Steve Jobs",
+    "Success is not final, failure is not fatal: it is the courage to continue that counts. - Winston Churchill",
+    "Believe you can and you're halfway there. - Theodore Roosevelt",
+    "Do what you can, with what you have, where you are. - Theodore Roosevelt",
+    "Act as if what you do makes a difference. It does. - William James",
+    "Dream big and dare to fail. - Norman Vaughan",
+    "Keep your face always toward the sunshine—and shadows will fall behind you. - Walt Whitman"
+]
 
-    static Random random = new Random();
+def get_random_quote():
+    return random.choice(quotes)
 
-    static void Main()
-    {
-        while (true)
-        {
-            Console.Clear();
-            Console.WriteLine("===== Random Quote Generator =====\n");
-            Console.WriteLine(GetRandomQuote());
-            Console.WriteLine("\nPress ENTER for a new quote or type 'exit' to quit.");
+def main():
+    while True:
+        print("\n===== Random Quote Generator =====")
+        print(get_random_quote())
+        user_input = input("\nPress ENTER for a new quote or type 'exit' to quit: ")
+        
+        if user_input.lower() == "exit":
+            print("Goodbye!")
+            break
 
-            string input = Console.ReadLine();
-            if (input.ToLower() == "exit")
-            {
-                Console.WriteLine("Goodbye!");
-                break;
-            }
-        }
-    }
-
-    static string GetRandomQuote()
-    {
-        int index = random.Next(quotes.Count);
-        return quotes[index];
-    }
-}
+if __name__ == "__main__":
+    main()
