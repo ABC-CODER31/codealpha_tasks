@@ -1,0 +1,23 @@
+import yfinance as yf
+
+class StockPortfolio:
+    def __init__(self):
+        self.portfolio = {}
+
+    def add_stock(self, symbol, shares):
+        symbol = symbol.upper()
+        if symbol in self.portfolio:
+            self.portfolio[symbol] += shares
+        else:
+            self.portfolio[symbol] = shares
+        print(f"✅ Added {shares} shares of {symbol} to portfolio.")
+
+    def remove_stock(self, symbol, shares):
+        symbol = symbol.upper()
+        if symbol in self.portfolio:
+            if self.portfolio[symbol] > shares:
+                self.portfolio[symbol] -= shares
+                print(f"✅ Removed {shares} shares of {symbol}.")
+            elif self.portfolio[symbol] == shares:
+                del self.portfolio[symbol]
+                print
