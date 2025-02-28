@@ -1,0 +1,91 @@
+using System;
+using System.Collections.Generic;
+
+class Flashcard
+{
+    public string Question { get; set; }
+    public string Answer { get; set; }
+
+    public Flashcard(string question, string answer)
+    {
+        Question = question;
+        Answer = answer;
+    }
+}
+
+class Program
+{
+    static List<Flashcard> flashcards = new List<Flashcard>();
+    static int score = 0;
+
+    static void Main()
+    {
+        while (true)
+        {
+            Console.WriteLine("\n===== Flashcard Quiz App =====");
+            Console.WriteLine("1. Add Flashcard");
+            Console.WriteLine("2. Start Quiz");
+            Console.WriteLine("3. Exit");
+            Console.Write("Enter choice: ");
+
+            string choice = Console.ReadLine();
+
+            switch (choice)
+            {
+                case "1":
+                    AddFlashcard();
+                    break;
+                case "2":
+                    StartQuiz();
+                    break;
+                case "3":
+                    Console.WriteLine("Exiting...");
+                    return;
+                default:
+                    Console.WriteLine("Invalid choice. Try again!");
+                    break;
+            }
+        }
+    }
+
+    static void AddFlashcard()
+    {
+        Console.Write("Enter question: ");
+        string question = Console.ReadLine();
+        Console.Write("Enter answer: ");
+        string answer = Console.ReadLine();
+
+        flashcards.Add(new Flashcard(question, answer));
+        Console.WriteLine("Flashcard added successfully!");
+    }
+
+    static void StartQuiz()
+    {
+        if (flashcards.Count == 0)
+        {
+            Console.WriteLine("No flashcards available! Add some first.");
+            return;
+        }
+
+        score = 0;
+
+        foreach (var flashcard in flashcards)
+        {
+            Console.WriteLine($"\nQuestion: {flashcard.Question}");
+            Console.Write("Your answer: ");
+            string userAnswer = Console.ReadLine();
+
+            if (userAnswer.Equals(flashcard.Answer, StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine("Correct!");
+                score++;
+            }
+            else
+            {
+                Console.WriteLine($"Incorrect! The correct answer is: {flashcard.Answer}");
+            }
+        }
+
+        Console.WriteLine($"\nQuiz Over! Your Score: {score}/{flashcards.Count}");
+    }
+}
