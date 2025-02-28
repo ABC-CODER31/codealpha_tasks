@@ -1,91 +1,55 @@
-using System;
-using System.Collections.Generic;
+import random
 
-class Flashcard
-{
-    public string Question { get; set; }
-    public string Answer { get; set; }
+class Flashcard:
+    def __init__(self, question, answer):
+        self.question = question
+        self.answer = answer
 
-    public Flashcard(string question, string answer)
-    {
-        Question = question;
-        Answer = answer;
-    }
-}
+flashcards = []
 
-class Program
-{
-    static List<Flashcard> flashcards = new List<Flashcard>();
-    static int score = 0;
+def add_flashcard():
+    question = input("Enter question: ")
+    answer = input("Enter answer: ")
+    flashcards.append(Flashcard(question, answer))
+    print("Flashcard added successfully!\n")
 
-    static void Main()
-    {
-        while (true)
-        {
-            Console.WriteLine("\n===== Flashcard Quiz App =====");
-            Console.WriteLine("1. Add Flashcard");
-            Console.WriteLine("2. Start Quiz");
-            Console.WriteLine("3. Exit");
-            Console.Write("Enter choice: ");
+def start_quiz():
+    if not flashcards:
+        print("No flashcards available! Add some first.\n")
+        return
 
-            string choice = Console.ReadLine();
+    score = 0
+    random.shuffle(flashcards)
 
-            switch (choice)
-            {
-                case "1":
-                    AddFlashcard();
-                    break;
-                case "2":
-                    StartQuiz();
-                    break;
-                case "3":
-                    Console.WriteLine("Exiting...");
-                    return;
-                default:
-                    Console.WriteLine("Invalid choice. Try again!");
-                    break;
-            }
-        }
-    }
+    for flashcard in flashcards:
+        print(f"\nQuestion: {flashcard.question}")
+        user_answer = input("Your answer: ")
 
-    static void AddFlashcard()
-    {
-        Console.Write("Enter question: ");
-        string question = Console.ReadLine();
-        Console.Write("Enter answer: ");
-        string answer = Console.ReadLine();
+        if user_answer.lower() == flashcard.answer.lower():
+            print("Correct!\n")
+            score += 1
+        else:
+            print(f"Incorrect! The correct answer is: {flashcard.answer}\n")
 
-        flashcards.Add(new Flashcard(question, answer));
-        Console.WriteLine("Flashcard added successfully!");
-    }
+    print(f"Quiz Over! Your Score: {score}/{len(flashcards)}\n")
 
-    static void StartQuiz()
-    {
-        if (flashcards.Count == 0)
-        {
-            Console.WriteLine("No flashcards available! Add some first.");
-            return;
-        }
+def main():
+    while True:
+        print("===== Flashcard Quiz App =====")
+        print("1. Add Flashcard")
+        print("2. Start Quiz")
+        print("3. Exit")
+        choice = input("Enter choice: ")
 
-        score = 0;
+        if choice == "1":
+            add_flashcard()
+        elif choice == "2":
+            start_quiz()
+        elif choice == "3":
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid choice! Try again.\n")
 
-        foreach (var flashcard in flashcards)
-        {
-            Console.WriteLine($"\nQuestion: {flashcard.Question}");
-            Console.Write("Your answer: ");
-            string userAnswer = Console.ReadLine();
-
-            if (userAnswer.Equals(flashcard.Answer, StringComparison.OrdinalIgnoreCase))
-            {
-                Console.WriteLine("Correct!");
-                score++;
-            }
-            else
-            {
-                Console.WriteLine($"Incorrect! The correct answer is: {flashcard.Answer}");
-            }
-        }
-
-        Console.WriteLine($"\nQuiz Over! Your Score: {score}/{flashcards.Count}");
-    }
-}
+if __name__ == "__main__":
+    main()
