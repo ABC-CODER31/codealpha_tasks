@@ -1,0 +1,128 @@
+using System;
+using System.Collections.Generic;
+
+class Workout
+{
+    public string Exercise { get; set; }
+    public int Duration { get; set; } // in minutes
+    public int CaloriesBurned { get; set; }
+
+    public Workout(string exercise, int duration, int caloriesBurned)
+    {
+        Exercise = exercise;
+        Duration = duration;
+        CaloriesBurned = caloriesBurned;
+    }
+}
+
+class FitnessTracker
+{
+    static List<Workout> workoutHistory = new List<Workout>();
+    static int goalCalories = 0;
+    static int goalDuration = 0;
+
+    static void Main()
+    {
+        while (true)
+        {
+            Console.WriteLine("\n===== Fitness Tracker App =====");
+            Console.WriteLine("1. Record Workout");
+            Console.WriteLine("2. Set Fitness Goal");
+            Console.WriteLine("3. View Progress");
+            Console.WriteLine("4. Exit");
+            Console.Write("Enter choice: ");
+
+            string choice = Console.ReadLine();
+
+            switch (choice)
+            {
+                case "1":
+                    RecordWorkout();
+                    break;
+                case "2":
+                    SetFitnessGoal();
+                    break;
+                case "3":
+                    ViewProgress();
+                    break;
+                case "4":
+                    Console.WriteLine("Goodbye!");
+                    return;
+                default:
+                    Console.WriteLine("Invalid choice. Try again!");
+                    break;
+            }
+        }
+    }
+
+    static void RecordWorkout()
+    {
+        Console.Write("Enter exercise name: ");
+        string exercise = Console.ReadLine();
+        
+        Console.Write("Enter duration (minutes): ");
+        if (!int.TryParse(Console.ReadLine(), out int duration) || duration <= 0)
+        {
+            Console.WriteLine("Invalid duration!");
+            return;
+        }
+
+        Console.Write("Enter calories burned: ");
+        if (!int.TryParse(Console.ReadLine(), out int calories) || calories <= 0)
+        {
+            Console.WriteLine("Invalid calorie input!");
+            return;
+        }
+
+        workoutHistory.Add(new Workout(exercise, duration, calories));
+        Console.WriteLine("Workout recorded successfully!");
+    }
+
+    static void SetFitnessGoal()
+    {
+        Console.Write("Set daily calorie goal: ");
+        if (!int.TryParse(Console.ReadLine(), out goalCalories) || goalCalories <= 0)
+        {
+            Console.WriteLine("Invalid goal!");
+            return;
+        }
+
+        Console.Write("Set daily workout duration goal (minutes): ");
+        if (!int.TryParse(Console.ReadLine(), out goalDuration) || goalDuration <= 0)
+        {
+            Console.WriteLine("Invalid goal!");
+            return;
+        }
+
+        Console.WriteLine("Fitness goal set successfully!");
+    }
+
+    static void ViewProgress()
+    {
+        if (workoutHistory.Count == 0)
+        {
+            Console.WriteLine("No workouts recorded yet.");
+            return;
+        }
+
+        int totalCalories = 0, totalDuration = 0;
+        Console.WriteLine("\n===== Workout History =====");
+
+        foreach (var workout in workoutHistory)
+        {
+            Console.WriteLine($"{workout.Exercise} - {workout.Duration} min, {workout.CaloriesBurned} cal");
+            totalCalories += workout.CaloriesBurned;
+            totalDuration += workout.Duration;
+        }
+
+        Console.WriteLine($"\nTotal Calories Burned: {totalCalories} cal");
+        Console.WriteLine($"Total Workout Time: {totalDuration} min");
+
+        if (goalCalories > 0 || goalDuration > 0)
+        {
+            Console.WriteLine("\n===== Progress Towards Goal =====");
+            Console.WriteLine($"Calories Goal: {goalCalories} cal ({(totalCalories >= goalCalories ? "✅ Achieved" : "❌ Not Achieved")})");
+            Console.WriteLine($"Workout Time Goal: {goalDuration} min ({(totalDuration >= goalDuration ? "✅ Achieved" : "❌ Not Achieved")})");
+        }
+    }
+}
